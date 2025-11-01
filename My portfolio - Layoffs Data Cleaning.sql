@@ -3,7 +3,7 @@
 SELECT *
 FROM layoffs;
 
--- 🧹 Data Cleaning with SQL: Key Steps
+-- Data Cleaning with SQL: Key Steps
 -- 1. Remove duplicates
 --    - Identify and delete repeated records to ensure data uniqueness.
 --
