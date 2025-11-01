@@ -3,14 +3,25 @@
 SELECT *
 FROM layoffs;
 
--- What to cover in data cleaning with SQL
+-- 🧹 Data Cleaning with SQL: Key Steps
 -- 1. Remove duplicates
--- 2. Standardize the data - check for spellings, cases i.e. upper, lower etc
--- 3. Null values or blank values
--- 4. Remove any irrelevant columns
+--    - Identify and delete repeated records to ensure data uniqueness.
+--
+-- 2. Standardize data
+--    - Correct inconsistent spellings.
+--    - Ensure consistent letter casing (e.g., UPPER, lower, Proper Case).
+--    - Format dates and numerical values uniformly.
+--
+-- 3. Handle null or blank values
+--    - Replace missing data where possible, or remove incomplete records if necessary.
+--
+-- 4. Remove irrelevant or unnecessary columns
+--    - Drop columns that do not contribute to analysis or insights.
 
 
--- creating a copy of the layoffs table so as to work with it and avoid using the original raw data
+
+-- Create a staging table (layoffs_staging) as a copy of the original layoffs table.
+-- This allows safe data cleaning and transformations without altering the raw data.
 CREATE TABLE layoffs_staging
 LIKE layoffs;
 
@@ -28,7 +39,7 @@ ROW_NUMBER() OVER(
 PARTITION BY company, location, industry, total_laid_off, percentage_laid_off, `date`, stage, country, funds_raised_millions) AS row_num
 FROM layoffs_staging;
 
--- checking duplicate data
+-- checking for duplicate data
 WITH duplicate_cte AS
 (
 SELECT *,
@@ -40,8 +51,9 @@ SELECT *
 FROM duplicate_cte
 WHERE row_num > 1;
 
--- create a copy table for deleting the duplicate rows
--- row_num column was also added
+-- Create a second staging table (layoffs_staging2) for deduplication.
+-- This table will be used to identify and remove duplicate rows safely.
+-- A 'row_num' column is added to help track duplicates using ROW_NUMBER().
 CREATE TABLE `layoffs_staging2` (
   `company` text,
   `location` text,
